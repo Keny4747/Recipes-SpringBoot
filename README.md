@@ -1,6 +1,5 @@
 # Recipes-SpringBoot
-- chnologies
-- Java 11
+- Java 17
 - gradle
 - Spring data JPA
 - Spring Security
