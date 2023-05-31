@@ -10,6 +10,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -31,6 +34,11 @@ public class Recipe {
     @NotBlank
     @NotNull()
     @NotEmpty()
+    private String category;
+
+    @NotBlank
+    @NotNull()
+    @NotEmpty()
     private String description;
 
     @NotEmpty()
@@ -42,5 +50,7 @@ public class Recipe {
     @ElementCollection
     @Size(min = 1)
     private List<String> directions;
+
+    private LocalDateTime date;
 
 }

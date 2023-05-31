@@ -10,8 +10,8 @@ import java.util.List;
 @NoArgsConstructor
 public class RecipeDTO {
     private String name;
+    private String category;
     private String description;
     private List<String> ingredients;
     private List<String> directions;
-
 }

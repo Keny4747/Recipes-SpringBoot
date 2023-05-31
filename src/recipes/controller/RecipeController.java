@@ -2,14 +2,14 @@ package recipes.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import recipes.model.Recipe;
-import recipes.model.dto.RecipeDTO;
 import recipes.services.RecipeService;
+
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -27,12 +27,12 @@ public class RecipeController {
     }
 
     @GetMapping("/recipe/{id}")
-    public ResponseEntity<RecipeDTO> getRecipe(@PathVariable int id) {
+    public ResponseEntity<Recipe> getRecipe(@PathVariable int id) {
         Recipe recipe = recipeService.get(id);
         if (recipe == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.ok(new ModelMapper().map(recipe, RecipeDTO.class));
+        return ResponseEntity.ok(recipe);
     }
 
     @DeleteMapping("/recipe/{id}")
@@ -43,5 +43,28 @@ public class RecipeController {
         }
         recipeService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PutMapping("/recipe/{id}")
+    public ResponseEntity<HttpStatus> updateRecipe( @PathVariable int id, @Valid @RequestBody Recipe recipeUpdate) {
+
+        return recipeService.updateRecipe(id, recipeUpdate);
+    }
+
+    @GetMapping("/recipe/search/")
+    public ResponseEntity<List<Recipe>> getRecipeByCategoryOrByName(@RequestParam(required = false) String category,
+                                                    @RequestParam(required = false) String name) {
+
+        if(category!=null && name!=null){
+            return ResponseEntity.badRequest().build();
+        }
+
+        if(name !=null){
+            return ResponseEntity.ok(recipeService.searchRecipeByName(name));
+        }
+        if(category!=null){
+            return ResponseEntity.ok(recipeService.searchRecipeByCategory(category));
+        }
+        return ResponseEntity.badRequest().build();
     }
 }
