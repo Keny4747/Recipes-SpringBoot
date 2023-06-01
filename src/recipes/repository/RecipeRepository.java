@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import recipes.model.Recipe;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
@@ -12,5 +13,6 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
 
     List<Recipe> findRecipeByCategoryIgnoreCaseOrderByDateDesc(String category);
 
+    Optional<Recipe> findRecipeById(int id);
 
 }

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.net.BindException;
 
 @RestControllerAdvice
-@Order(Ordered.HIGHEST_PRECEDENCE)
 public class ControllerAdviceHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Void> handleValidationExceptions(MethodArgumentNotValidException ex) {
@@ -21,5 +20,9 @@ public class ControllerAdviceHandler {
     @ExceptionHandler(BindException.class)
     public ResponseEntity<Void> handleBindExceptions(BindException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+    @ExceptionHandler(RecipeNotFoundException.class)
+    public ResponseEntity<Void> handleRecipeNotFoundException(RecipeNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }

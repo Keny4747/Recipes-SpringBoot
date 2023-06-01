@@ -4,9 +4,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import recipes.model.Recipe;
+import recipes.security.UserInfoUserDetails;
 import recipes.services.RecipeService;
 
 import java.util.List;
@@ -21,8 +23,8 @@ public class RecipeController {
     private final RecipeService recipeService;
 
     @PostMapping("/recipe/new")
-    public Map<String, Object> createRecipe(@Valid @RequestBody Recipe recipeRequest) {
-
+    public Map<String, Object> createRecipe(@Valid @RequestBody Recipe recipeRequest, @AuthenticationPrincipal UserInfoUserDetails userDetails) {
+        recipeRequest.setEmail(userDetails.getUsername());
         return recipeService.create(recipeRequest);
     }
 
@@ -36,19 +38,20 @@ public class RecipeController {
     }
 
     @DeleteMapping("/recipe/{id}")
-    public ResponseEntity<HttpStatus> deleteRecipe(@PathVariable int id) {
-        Recipe recipe = recipeService.get(id);
-        if (recipe == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        recipeService.deleteById(id);
+    public ResponseEntity<HttpStatus> deleteRecipe(@PathVariable int id,
+                                                   @AuthenticationPrincipal UserInfoUserDetails userDetails) {
+
+        recipeService.deleteById(id,userDetails);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/recipe/{id}")
-    public ResponseEntity<HttpStatus> updateRecipe( @PathVariable int id, @Valid @RequestBody Recipe recipeUpdate) {
+    public ResponseEntity<HttpStatus> updateRecipe( @PathVariable int id,
+                                                    @Valid @RequestBody Recipe recipeUpdate,
+                                                    @AuthenticationPrincipal UserInfoUserDetails userDetails) {
 
-        return recipeService.updateRecipe(id, recipeUpdate);
+
+        return recipeService.updateRecipe(id, recipeUpdate,userDetails);
     }
 
     @GetMapping("/recipe/search/")

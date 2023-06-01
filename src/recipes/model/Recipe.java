@@ -53,4 +53,8 @@ public class Recipe {
 
     private LocalDateTime date;
 
+    @JsonIgnore
+    private String email;
+
+
 }
